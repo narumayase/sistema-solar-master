@@ -1,0 +1,82 @@
+swagger: "2.0"
+info:
+  description: "Endpoints"
+  version: "1.0.0-SNAPSHOT"
+  title: "Sistema Solar"
+  contact:
+    email: "ayelenbaglietto@gmail.com"
+host: "35.202.90.227:8080"
+basePath: "/sistema-solar"
+tags:
+- name: "clima"
+  description: "Endpoints"
+schemes:
+- "http"
+paths:
+  /clima/:
+    get:
+      tags:
+      - clima
+      summary: "Obtiene el clima del día elegido."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "dia"
+        type: 'integer'
+        description: "El día para consultarle el clima."
+      responses:
+        200:
+          description: "La llamada fue resuelta correctamente."
+          schema:
+            $ref: "#/definitions/Clima"
+  /clima/iteracion:
+    get:
+      tags:
+      - clima
+      summary: "Obtiene: cantidad de períodos de lluvia + cantidad de períodos de sequía + cantidad de períodos de condiciones óptimas y qué días fueron los de máxima intensidad de lluvia dentro del período de lluvia. En una iteración de 360 días puesto que es cuando se repiten los climas."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "cantAnios"
+        type: 'integer'
+        description: "La cantidad de años por la que se quiere hacer la consulta. Tener en cuenta que el año es Ferengi (de 360 días).  Ejemplo: 10"
+      responses:
+        200:
+          description: "La llamada fue resuelta correctamente."
+          schema:
+            $ref: "#/definitions/Iteracion"            
+definitions:
+  Clima:
+    type: "object"
+    properties:
+      dia:
+        type: string
+        description: "el día seleccionado"
+      clima:
+        type: "string"
+        description: "el clima del día seleccionado"
+  Iteracion:
+    type: "object"
+    properties:
+      cantidadDePeriodosConSequia:
+        type: string
+        description: "Cantidad de períodos de sequía."
+      cantidadDePeriodosConLluvia:
+        type: "string"
+        description: "Cantidad de períodos con lluvia."       
+      cantidadDePeriodosConCondicionesOptimas:
+        type: "string"
+        description: "Cantidad de períodos de condiciones óptimas de temperatura y presión."     
+      diasDeMaximaIntensidadDeLluvia:
+        type: "array"
+        items:
+              $ref: "#/definitions/DiasDeMaximaIntensidadLluvia"
+        description: "Listado de días de máxima intensidad de lluvia."        
+  DiasDeMaximaIntensidadLluvia:
+    type: "integer" 

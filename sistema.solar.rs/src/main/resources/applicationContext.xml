@@ -1,0 +1,84 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
+
+	<context:component-scan
+		base-package="sistema.solar" />
+
+	<bean id="weatherService"
+		class="sistema.solar.service.impl.WeatherServiceImpl">
+		<property name="geometryUtility" ref="geometryUtility" />
+		<property name="betasoide" ref="betasoide" />
+		<property name="ferengi" ref="ferengi" />
+		<property name="vulcano" ref="vulcano" />
+		<property name="weatherDAO" ref="weatherDAO" />
+		<property name="weatherIterationDAO"
+			ref="weatherIterationDAO" />
+	</bean>
+
+	<bean id="geometryUtility"
+		class="sistema.solar.service.impl.util.GeometryUtility">
+	</bean>
+
+	<bean id="betasoide" class="sistema.solar.dto.PlanetDTO">
+		<property name="name" value="Betasoide" />
+		<property name="degreePerDay" value="3" />
+		<property name="clockwise" value="true" />
+		<property name="actualDegree" value="360" />
+		<property name="distanceOfSun" value="2000" />
+	</bean>
+
+	<bean id="ferengi" class="sistema.solar.dto.PlanetDTO">
+		<property name="name" value="Ferengi" />
+		<property name="degreePerDay" value="1" />
+		<property name="clockwise" value="true" />
+		<property name="actualDegree" value="360" />
+		<property name="distanceOfSun" value="500" />
+	</bean>
+
+	<bean id="vulcano" class="sistema.solar.dto.PlanetDTO">
+		<property name="name" value="Vulcano" />
+		<property name="degreePerDay" value="5" />
+		<property name="clockwise" value="false" />
+		<property name="actualDegree" value="0" />
+		<property name="distanceOfSun" value="1000" />
+	</bean>
+
+	<bean id="weatherDAO"
+		class="sistema.solar.dao.impl.WeatherDAOImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="weatherIterationDAO"
+		class="sistema.solar.dao.impl.WeatherIterationDAOImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+		p:driverClassName="org.sqlite.JDBC"
+		p:url="jdbc:sqlite::resource:sistemaSolar.sqlite"></bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="configLocation">
+			<value>hibernate.cfg.xml</value>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">com.enigmabridge.hibernate.dialect.SQLiteDialect
+				</prop>
+				<!-- <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect -->
+				<!-- </prop> -->
+				<prop key="hibernate.show_sql">false</prop>
+			</props>
+		</property>
+	</bean>
+</beans>
