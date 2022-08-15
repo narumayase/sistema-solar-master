@@ -20,7 +20,7 @@ Tools needed to run the service locally:
 - MySQL 5.6+.
 - Maven 3.2+.
 
-- Run:
+Run:
 ```
 $mvn install
 ```
